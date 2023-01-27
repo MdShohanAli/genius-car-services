@@ -3,7 +3,7 @@ import React from 'react';
 const Expert = ({ expert }) => {
     const { name, img } = expert
     return (
-        <div className='g-4 col-sm-12 col-md-6 col-lg-4 '>
+        <div id='experts' className='g-4 col-sm-12 col-md-6 col-lg-4 '>
             <div className="card" >
                 <img src={img} className="card-img-top" alt="..." />
                 <div className="card-body">
