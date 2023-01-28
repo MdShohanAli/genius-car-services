@@ -1,26 +1,43 @@
 
 import { useRef } from 'react';
 import { Form, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom'
+import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import auth from '../../Firebase/Firebase.init';
 
 const Login = () => {
-
+    let location = useLocation();
+    const navigate = useNavigate()
     const emailRef = useRef('')
     const passwordRef = useRef('')
+    const [
+        signInWithEmailAndPassword,
+        user,
+        error,
+    ] = useSignInWithEmailAndPassword(auth);
 
-
+    let from = location.state?.from?.pathname || "/";
     const handleSubmit = event => {
         event.preventDefault()
         const email = emailRef.current.value
         const password = passwordRef.current.value
+        signInWithEmailAndPassword(email, password);
     }
+    if (user) {
+        navigate(from, { replace: true });
+    }
+    if (error) {
+        <div>
+            <p>Error: {error.message}</p>
+        </div>
 
+    }
 
 
 
     return (
         <div className='container w-50 ' >
-            <h1 className='text-center mt-5 text-primary ' >Login Form</h1>
+            <h1 className='text-center mt-5 text-primary'>Login Form</h1>
             <div className='mx-auto mt-5  '  >
                 <Form onSubmit={handleSubmit} >
                     <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -42,6 +59,7 @@ const Login = () => {
                     <Button variant="primary" type="submit">
                         Login
                     </Button>
+                    <p className='text-danger'>{error.message}</p>
                 </Form>
             </div>
         </div>

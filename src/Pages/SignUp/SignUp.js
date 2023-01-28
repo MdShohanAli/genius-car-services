@@ -1,11 +1,17 @@
 import React, { useRef } from 'react';
 
 import { Button, Form } from 'react-bootstrap';
-import { Link } from 'react-router-dom'
-
+import { Link, useNavigate } from 'react-router-dom'
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import auth from '../../Firebase/Firebase.init'
 
 const SignUp = () => {
-
+    const [
+        createUserWithEmailAndPassword,
+        user,
+        error,
+    ] = useCreateUserWithEmailAndPassword(auth);
+    const navigate = useNavigate()
     const emailRef = useRef('')
     const passwordRef = useRef('')
     const conformPasswordRef = useRef('')
@@ -16,7 +22,13 @@ const SignUp = () => {
         const email = emailRef.current.value
         const password = passwordRef.current.value
         const conformPassword = conformPasswordRef.current.value
+        createUserWithEmailAndPassword(email, password, conformPassword)
+
     }
+    if (user) {
+        navigate('/')
+    }
+
 
     return (
         <div className='container w-50' >
@@ -47,6 +59,7 @@ const SignUp = () => {
                 <Button variant="primary" type="submit">
                     Sign Up
                 </Button>
+                <p className='text-danger'> {error} </p>
             </Form>
 
         </div>
